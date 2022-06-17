@@ -7,7 +7,7 @@ from mysql_connection import get_connection
 
 class RecipeResource(Resource) :
     # 클라이언트로 부터 recipes/3 이런식으로 경로를 처리하므로
-    # 숫자는 바뀌느로, 변수로 처리해준다. 
+    # 숫자는 바뀌므로, 변수로 처리해준다. 
     
     def get(self, recipe_id) :
 
@@ -57,6 +57,7 @@ class RecipeResource(Resource) :
                 'info' : result_list[0]}
 
 
+    # 데이터를 업데이트하는 API들은 put 함수를 사용한다.
     def put(self, recipe_id) :
 
         # body에서 전달된 데이터를 처리
@@ -74,6 +75,39 @@ class RecipeResource(Resource) :
                     where id = %s;'''
             
             record = (data['name'], data['description'], data['cook_time'], data['directions'], recipe_id)
+
+            # 3. 커서를 가져온다.
+            cursor = connection.cursor()
+
+            # 4. 쿼리문을 커서를 이용해서 실행한다
+            cursor.execute(query, record)
+
+            # 5. 커넥션을 커밋해줘야 한다. => 디비에 영구적으로 반영하라는 뜻
+            connection.commit()
+
+            # 6. 자원 해제
+            cursor.close()
+            connection.close()
+
+        except mysql.connector.Error as e :
+            print(e)
+            cursor.close()
+            connection.close()
+            return {"error" : str(e)}, 503
+
+        return {'result' : 'success'}, 200
+
+    # 삭제하는 delete 함수
+    def delete(self, recipe_id) :
+        try :
+            # 데이터 insert
+            # 1. DB에 연결
+            connection = get_connection()
+
+            query = '''delete from recipe 
+                    where id=%s;'''
+            
+            record = (recipe_id, )
 
             # 3. 커서를 가져온다.
             cursor = connection.cursor()
