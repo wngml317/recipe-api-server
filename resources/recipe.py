@@ -26,11 +26,11 @@ class RecipeListResource(Resource) :
             connection = get_connection()
 
             query = '''insert into recipe
-                    (name, description, cook_time, directions)
+                    (name, description, cook_time, directions, user_id)
                     values
-                    (%s, %s, %s, %s);'''
+                    (%s, %s, %s, %s, %s);'''
             
-            record = (data['name'], data['description'], data['cook_time'], data['directions'])
+            record = (data['name'], data['description'], data['cook_time'], data['directions'], data['user_id'])
 
             # 3. 커서를 가져온다.
             cursor = connection.cursor()
@@ -64,6 +64,7 @@ class RecipeListResource(Resource) :
             connection = get_connection()
 
             query = '''select * from recipe
+                        where is_publish = 1
                         limit {}, {};'''.format(offset, limit)  
 
             # select 문은 dictionary=True 를 해준다.
