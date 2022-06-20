@@ -1,5 +1,6 @@
 from http import HTTPStatus
 from flask import request
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
 from mysql.connector.errors import Error
 import mysql.connector
@@ -13,12 +14,16 @@ from mysql_connection import get_connection
 
 class RecipeListResource(Resource) :
     # restful api의 method 에 해당하는 함수 작성
+    
+    @jwt_required()
     def post(self) :
         # api 실행 코드를 여기에 작성
 
-        # 클라이언트에서 body 부분에 작성한 json을 받아오는  코드
+        # 클라이언트에서 body 부분에 작성한 json을 받아오는 코드
         data = request.get_json()
-    
+
+        # 암호화 된 토큰으로부터 user_id를 얻어올 수 있다
+        user_id = get_jwt_identity()
 
         try :
             # 데이터 insert
@@ -30,7 +35,7 @@ class RecipeListResource(Resource) :
                     values
                     (%s, %s, %s, %s, %s);'''
             
-            record = (data['name'], data['description'], data['cook_time'], data['directions'], data['user_id'])
+            record = (data['name'], data['description'], data['cook_time'], data['directions'], user_id)
 
             # 3. 커서를 가져온다.
             cursor = connection.cursor()
