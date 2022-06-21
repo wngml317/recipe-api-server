@@ -18,6 +18,7 @@ class RecipePublishResource(Resource) :
             # 1. DB에 연결
             connection = get_connection()
 
+            # 2. 쿼리문 만들기
             query = '''update recipe
                     set is_publish = 1
                     where id = %s;'''
@@ -54,6 +55,7 @@ class RecipePublishResource(Resource) :
             # 1. DB에 연결
             connection = get_connection()
 
+            # 2. 쿼리문 만들기
             query = '''update recipe
                     set is_publish = 0
                     where id = %s;'''

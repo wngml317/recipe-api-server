@@ -54,6 +54,7 @@ class UserRegisterResource(Resource) :
             # 1. DB에 연결
             connection = get_connection()
 
+            # 2. 쿼리문 만들기
             query = '''insert into user
                     (username, email, password)
                     values
@@ -107,8 +108,10 @@ class UserLoginResource(Resource) :
 
         # 2. 이메일로 DB에 이 이메일과 일치하는 데이터를 가져온다.
         try :
+            # DB에 연결
             connection = get_connection()
 
+            # 2. 쿼리문 만들기
             query = '''select *
                         from user
                         where email = %s;'''

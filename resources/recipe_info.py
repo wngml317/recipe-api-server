@@ -96,6 +96,7 @@ class RecipeResource(Resource) :
                 connection.close()
                 return {"error" : "다른 사람의 레시피를 수정할 수 없습니다."}
 
+            # 2. 쿼리문 만들기
             query = '''update recipe
                     set name = %s , description = %s, 
                     cook_time = %s, directions = %s
@@ -131,6 +132,7 @@ class RecipeResource(Resource) :
             # 1. DB에 연결
             connection = get_connection()
 
+            # 2. 쿼리문 만들기
             query = '''delete from recipe 
                     where id=%s;'''
             

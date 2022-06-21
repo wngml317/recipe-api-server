@@ -30,6 +30,7 @@ class RecipeListResource(Resource) :
             # 1. DB에 연결
             connection = get_connection()
 
+            # 2. 쿼리문 만들기
             query = '''insert into recipe
                     (name, description, cook_time, directions, user_id)
                     values
