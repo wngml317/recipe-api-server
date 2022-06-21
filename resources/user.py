@@ -1,7 +1,7 @@
 import datetime
 from http import HTTPStatus
 from flask import request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from flask_restful import Resource
 from mysql.connector.errors import Error
 import mysql.connector
@@ -165,3 +165,21 @@ class UserLoginResource(Resource) :
         access_token = create_access_token(user_info['id'])
 
         return {"result" : "success", "access_token" : access_token}, 200
+
+# 로그아웃 되었는지 확인해줌
+# set에 토큰이 있으면 로그아웃한 유저
+jwt_blacklist = set()
+
+# 로그아웃 기능을 하는 클래스
+class UserLogoutResource(Resource) :
+    @jwt_required()
+    def post(self) :
+        
+        # 헤더 부분에 jti를 가져와
+        jti = get_jwt()['jti']
+        print(jti)
+
+        # jwt_blacklist에 jti 값을 넣어줌
+        jwt_blacklist.add(jti)
+
+        return
